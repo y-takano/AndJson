@@ -2,6 +2,8 @@ package jp.gr.java_conf.ke.json.stream;
 
 import java.io.IOException;
 
+import jp.gr.java_conf.ke.json.JsonSyntaxException;
+
 public interface JsonGenerator {
 
 	JsonBuilder rootObject();

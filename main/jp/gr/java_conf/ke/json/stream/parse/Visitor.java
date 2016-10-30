@@ -1,13 +1,13 @@
 package jp.gr.java_conf.ke.json.stream.parse;
 
+import java.io.IOException;
 import java.util.Queue;
 
-import jp.gr.java_conf.ke.json.stream.Json;
-import jp.gr.java_conf.ke.json.stream.JsonSyntaxException;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
-import jp.gr.java_conf.ke.json.stream.Json.ValueType;
-import jp.gr.java_conf.ke.json.stream.parse.VisitorsContext.State;
+import jp.gr.java_conf.ke.json.JsonSyntaxException;
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
+import jp.gr.java_conf.ke.json.ValueType;
+import jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
 
 abstract class Visitor {
 
@@ -27,40 +27,39 @@ abstract class Visitor {
 
 	private static final char[] NUM = {
 		'1', '2', '3', '4','5', '6', '7', '8', '9', '0',
-		'-', 'e', 'E',
+		'-', 'E',
 	};
 
 	private final char END = endSymbol();
 	private final State DEFAULT_STATE = defaultState();
 
-	//protected JsonTokenContext context;
 	protected StringBuilder sb;
 
 	private Context ctxt;
-	private VisitorsContext vc;
+	private VisitorStack stack;
 	private Queue<Token> tokenQueue;
 
 	abstract protected char endSymbol() ;
 	abstract protected State defaultState() ;
-	abstract protected void doVisit(char c) throws JsonSyntaxException;
+	abstract protected void doVisit(char c) throws JsonSyntaxException, IOException;
 
-	public void visit(Context ctxt, Queue<Token> tokenQueue) {
+	public void visit(Context ctxt, Queue<Token> tokenQueue) throws JsonSyntaxException, IOException {
 		this.ctxt = ctxt;
-		this.vc = ctxt.getContext();
+		this.stack = ctxt.getStack();
 		this.tokenQueue = tokenQueue;
 
 		int i = 0;
 		char c;
 		int cnt = tokenQueue.size();
 		for (c = ctxt.read(); !ctxt.isClosed(); c = ctxt.readForward(i + 1), i++) {
-			vc.setEscape(c == '\\');
+			stack.setEscape(c == '\\');
 			doVisit(c);
 			if (cnt < tokenQueue.size()) break;
 		}
 		if (0 < i) ctxt.skip(i);
 	}
 
-	protected void findValue(char c) {
+	protected void findValue(char c) throws IOException {
 		switch (c) {
 
 		case STR_START:
@@ -69,17 +68,17 @@ abstract class Visitor {
 			break;
 
 		case OBJ_START:
-			startObject(Json.createSymbol(Symbol.valueOf(c)));
+			startObject(Token.createSymbol(Symbol.valueOf(c)));
 			break;
 
 		case ARRAY_START:
-			startArray(Json.createSymbol(Symbol.valueOf(c)));
+			startArray(Token.createSymbol(Symbol.valueOf(c)));
 			break;
 
 		case OBJ_END:
 		case ARRAY_END:
 			if (c == END) {
-				endElement(Json.createSymbol(Symbol.valueOf(c)));
+				endElement(Token.createSymbol(Symbol.valueOf(c)));
 				return;
 			}
 			throwException("構文エラー:開かれていないオブジェクトが閉じられています: " + c);
@@ -97,10 +96,10 @@ abstract class Visitor {
 
 	protected void buildNumber(char c) {
 		if (c == END) {
-			offerToken(Json.createValue(ValueType.NUMBER, sb));
-			endElement(Json.createSymbol(Symbol.valueOf(c)));
+			offerToken(Token.createValue(ValueType.NUMBER, sb));
+			endElement(Token.createSymbol(Symbol.valueOf(c)));
 		} else if (c == SEPARATOR) {
-			offerToken(Json.createValue(ValueType.NUMBER, sb));
+			offerToken(Token.createValue(ValueType.NUMBER, sb));
 			setState(DEFAULT_STATE);
 			sb = newBuilder();
 		} else {
@@ -111,7 +110,7 @@ abstract class Visitor {
 	protected void buildStringValue(char c) {
 		if (c == STR_END) {
 			setState(State.FIND_NEXT);
-			offerToken(Json.createValue(ValueType.STRING, sb));
+			offerToken(Token.createValue(ValueType.STRING, sb));
 		} else if (c == SEPARATOR) {
 			setState(DEFAULT_STATE);
 		} else {
@@ -122,7 +121,7 @@ abstract class Visitor {
 	protected void buildStringName(char c) {
 		if (c == STR_END) {
 			setState(State.FIND_NEXT);
-			offerToken(Json.createName(sb));
+			offerToken(Token.createName(sb));
 		} else if (c == SEPARATOR) {
 			setState(DEFAULT_STATE);
 		} else {
@@ -130,22 +129,22 @@ abstract class Visitor {
 		}
 	}
 
-	protected boolean isLiteral(char c) {
+	protected boolean isLiteral(char c) throws IOException {
 		boolean ret = false;
-		if (vc.isEscape()) return ret;
+		if (stack.isEscape()) return ret;
 
-		if (c == 'n' && readForward(0) == 'u' && readForward(1) == 'l' && readForward(2) == 'l') {
-			offerToken(Json.createNullValue());
+		if (c == 'n' && readForward(2) == 'u' && readForward(3) == 'l' && readForward(4) == 'l') {
+			offerToken(Token.createNullValue());
 			skip(3);
 			ret = true;
 
-		} else if (c == 't' && readForward(0) == 'r' && readForward(1) == 'u' && readForward(2) == 'e') {
-			offerToken(Json.createValue(ValueType.BOOLEAN, new StringBuilder("true")));
+		} else if (c == 't' && readForward(2) == 'r' && readForward(3) == 'u' && readForward(4) == 'e') {
+			offerToken(Token.createValue(ValueType.BOOLEAN, new StringBuilder("true")));
 			skip(3);
 			ret = true;
 
-		} else if (c == 'f' && readForward(0) == 'a' && readForward(1) == 'l' && readForward(2) == 's' && readForward(3) == 'e') {
-			offerToken(Json.createValue(ValueType.BOOLEAN, new StringBuilder("false")));
+		} else if (c == 'f' && readForward(2) == 'a' && readForward(3) == 'l' && readForward(4) == 's' && readForward(5) == 'e') {
+			offerToken(Token.createValue(ValueType.BOOLEAN, new StringBuilder("false")));
 			skip(4);
 			ret = true;
 		}
@@ -167,35 +166,35 @@ abstract class Visitor {
 	}
 
 	protected State getState() {
-		return this.vc.getState();
+		return this.stack.getState();
 	}
 
 	protected void setState(State state) {
-		this.vc.setState(state);
+		this.stack.setState(state);
 	}
 
 	protected void offerToken(Token token) {
 		this.tokenQueue.offer(token);
 	}
 
-	protected char readForward(int index) {
+	protected char readForward(int index) throws IOException {
 		return this.ctxt.readForward(index);
 	}
 
 	protected void startObject(Token token) {
-		vc.startObject();
-		vc.setState(State.FIND_NAME);
+		stack.startObject();
+		stack.setState(State.FIND_NAME);
 		offerToken(token);
 	}
 
 	protected void startArray(Token token) {
-		vc.startArray();
-		vc.setState(State.FIND_VALUE);
+		stack.startArray();
+		stack.setState(State.FIND_VALUE);
 		offerToken(token);
 	}
 
 	protected void endElement(Token token) {
-		vc.endElement();
+		stack.endElement();
 		offerToken(token);
 	}
 

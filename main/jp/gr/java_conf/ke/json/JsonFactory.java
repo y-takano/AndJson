@@ -98,7 +98,9 @@ public class JsonFactory {
 		static {
 			try {
 				deserialize("{\"name1\":\"val1\",\"name2\":-229.31289,\"name3\":[\"val1\"],\"name4\":{\"key1\":\"val1\"},\"name5\":{}}", TestClass.class);
-			} catch (JsonConvertException | IOException e) {
+			} catch (JsonConvertException e) {
+				throw new ExceptionInInitializerError(e);
+			} catch (IOException e) {
 				throw new ExceptionInInitializerError(e);
 			}
 		}

@@ -1,6 +1,6 @@
 package jp.gr.java_conf.ke.json.databind;
 
-import jp.gr.java_conf.ke.json.databind.internal.AdapterFactory;
+import jp.gr.java_conf.ke.json.databind.internal.adapter.AdapterFactory;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;

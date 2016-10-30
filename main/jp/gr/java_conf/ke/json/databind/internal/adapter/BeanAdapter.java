@@ -2,15 +2,14 @@ package jp.gr.java_conf.ke.json.databind.internal.adapter;
 
 import java.lang.reflect.Field;
 
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
 import jp.gr.java_conf.ke.json.databind.JsonBindException;
-import jp.gr.java_conf.ke.json.databind.internal.AdapterFactory;
 import jp.gr.java_conf.ke.json.databind.internal.conversion.Conversion;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
 
-public class BeanAdapter<T> extends ObjectAdapter<T> {
+class BeanAdapter<T> extends ObjectAdapter<T> {
 
 	public BeanAdapter(AdapterContext<T> ctxt) {
 		super(ctxt);

@@ -3,9 +3,9 @@ package jp.gr.java_conf.ke.json.databind.internal.adapter;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
 
-public class ArrayAdapter<T> extends ObjectAdapter<T> {
+class ArrayAdapter<T> extends ObjectAdapter<T> {
 
-	public ArrayAdapter(AdapterContext ctxt) {
+	public ArrayAdapter(AdapterContext<T> ctxt) {
 		super(ctxt);
 		// TODO 自動生成されたコンストラクター・スタブ
 	}

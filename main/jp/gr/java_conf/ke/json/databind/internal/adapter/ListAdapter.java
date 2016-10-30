@@ -2,16 +2,16 @@ package jp.gr.java_conf.ke.json.databind.internal.adapter;
 
 import java.util.Collection;
 
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
 import jp.gr.java_conf.ke.json.databind.JsonBindException;
 import jp.gr.java_conf.ke.json.databind.converter.JsonConverter;
 import jp.gr.java_conf.ke.json.databind.internal.conversion.Conversion;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
 
 @SuppressWarnings("rawtypes")
-public class ListAdapter<E extends Collection> extends ObjectAdapter<E> {
+class ListAdapter<E extends Collection> extends ObjectAdapter<E> {
 
 	public ListAdapter(AdapterContext<E> ctxt) {
 		super(ctxt);

@@ -1,8 +1,10 @@
 package jp.gr.java_conf.ke.json.stream.parse;
 
-import jp.gr.java_conf.ke.json.stream.Json;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.parse.VisitorsContext.State;
+import java.io.IOException;
+
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
+import jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
 
 class ObjectVisitor extends Visitor {
 
@@ -17,7 +19,7 @@ class ObjectVisitor extends Visitor {
 	}
 
 	@Override
-	public void doVisit(char c) {
+	public void doVisit(char c) throws IOException {
 
 		switch (getState()) {
 
@@ -57,14 +59,14 @@ class ObjectVisitor extends Visitor {
 			sb = newBuilder();
 
 		} else if (c == OBJ_END) {
-			endElement(Json.createSymbol(Symbol.valueOf(c)));
+			endElement(Token.createSymbol(Symbol.valueOf(c)));
 		}
 	}
 
 	private void findNext(char c) {
 		if (isWhiteSpace(c)) return;
 		else if (c == OBJ_END) {
-			endElement(Json.createSymbol(Symbol.valueOf(c)));
+			endElement(Token.createSymbol(Symbol.valueOf(c)));
 
 		} else if (c == SEPARATOR) {
 			setState(State.FIND_NAME);

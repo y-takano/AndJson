@@ -2,11 +2,10 @@ package jp.gr.java_conf.ke.json.stream.parse;
 
 import java.util.Iterator;
 
-import jp.gr.java_conf.ke.json.core.BufferedTextReader;
-import jp.gr.java_conf.ke.json.stream.IOStreamingException;
-import jp.gr.java_conf.ke.json.stream.Json;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
+import jp.gr.java_conf.ke.io.BufferedTextReader;
+import jp.gr.java_conf.ke.io.IOStreamingException;
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
 
 class JsonParserImpl implements JsonParser {
@@ -40,7 +39,7 @@ class JsonParserImpl implements JsonParser {
 
 	@Override
 	public Token next() {
-		if (currentToken != null) Json.releaseToken(currentToken);
+		if (currentToken != null) Token.releaseToken(currentToken);
 		currentToken = context.next();
 		return currentToken;
 	}

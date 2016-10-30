@@ -5,25 +5,26 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import jp.gr.java_conf.ke.json.core.BufferedTextReader;
-import jp.gr.java_conf.ke.json.stream.IOStreamingException;
-import jp.gr.java_conf.ke.json.stream.JsonSyntaxException;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
+import jp.gr.java_conf.ke.io.BufferedTextReader;
+import jp.gr.java_conf.ke.io.IOStreamingException;
+import jp.gr.java_conf.ke.json.JsonSyntaxException;
+import jp.gr.java_conf.ke.json.Token;
 
 class Context implements Iterator<Token> {
 
 	private final BufferedTextReader reader;
 	private final Queue<Token> tokenQueue;
-	private final VisitorsContext context;
+	private final VisitorStack stack;
 
 	private char[] currentBuffer;
 	private char[] nextBuffer;
 	private int currentIndex;
+	private int nextBufferIndex;
 
 	public Context(BufferedTextReader reader) {
 		this.reader = reader;
 		this.tokenQueue = new LinkedList<Token>();
-		this.context = new VisitorsContext();
+		this.stack = new VisitorStack();
 	}
 
 	@Override
@@ -44,7 +45,7 @@ class Context implements Iterator<Token> {
 		return currentBuffer[currentIndex];
 	}
 
-	char readForward(int index) {
+	char readForward(int index) throws IOException {
 		int pos = currentIndex + index;
 		if (pos < currentBuffer.length) {
 			return currentBuffer[pos];
@@ -57,7 +58,7 @@ class Context implements Iterator<Token> {
 		}
 		if (nextPos >= nextBuffer.length) {
 			close();
-			return (char)-1;
+			return (char) -1;
 		}
 		return nextBuffer[nextPos];
 	}
@@ -66,8 +67,8 @@ class Context implements Iterator<Token> {
 		currentIndex += index;
 	}
 
-	VisitorsContext getContext() {
-		return context;
+	VisitorStack getStack() {
+		return stack;
 	}
 
 	void close() {
@@ -84,27 +85,44 @@ class Context implements Iterator<Token> {
 
 	private void postToken() throws JsonSyntaxException, IOStreamingException {
 
-		if (nextBuffer == null) {
-			currentBuffer = reader.readPacket();
-		} else {
-			currentBuffer = nextBuffer;
-			nextBuffer = null;
-		}
-
-		// テキストを読み込む
-		currentIndex = 0;
-		while (currentIndex < currentBuffer.length) {
-
-			// visitorに処理を委譲
-			context.getCurrentVisitor().visit(this, tokenQueue);
-
-			// 解析終了
-			if (context.isEnd()) {
-				close();
-				break;
+		try {
+			if (nextBuffer == null) {
+				currentBuffer = reader.readPacket();
+				currentIndex = 0;
+			} else {
+				currentIndex = nextBufferIndex;
+				nextBufferIndex = 0;
+				currentBuffer = nextBuffer;
+				nextBuffer = null;
 			}
 
-			currentIndex++;
+			// テキストを読み込む
+			while (currentIndex < currentBuffer.length) {
+
+				// visitorに処理を委譲
+				stack.getCurrentVisitor().visit(this, tokenQueue);
+
+				// 解析終了
+				if (stack.isEmpty()) {
+					close();
+					break;
+				}
+
+				currentIndex++;
+			}
+
+			if (reader.getPacketSize() < currentIndex) {
+
+				nextBufferIndex = currentIndex - reader.getPacketSize() -1;
+			}
+		} catch (Exception e) {
+			throw new IOStreamingException(e);
 		}
+	}
+
+	@Override
+	public void remove() {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 }

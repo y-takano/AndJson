@@ -1,9 +1,11 @@
 package jp.gr.java_conf.ke.json.stream.parse;
 
-import jp.gr.java_conf.ke.json.stream.Json;
-import jp.gr.java_conf.ke.json.stream.JsonSyntaxException;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.parse.VisitorsContext.State;
+import java.io.IOException;
+
+import jp.gr.java_conf.ke.json.JsonSyntaxException;
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
+import jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
 
 class ArrayVisitor  extends Visitor {
 
@@ -18,7 +20,7 @@ class ArrayVisitor  extends Visitor {
 	}
 
 	@Override
-	public void doVisit(char c) throws JsonSyntaxException {
+	public void doVisit(char c) throws JsonSyntaxException, IOException {
 
 		switch (getState()) {
 
@@ -47,7 +49,7 @@ class ArrayVisitor  extends Visitor {
 
 	private void findNext(char c) {
 		if (c == ARRAY_END) {
-			endElement(Json.createSymbol(Symbol.valueOf(c)));
+			endElement(Token.createSymbol(Symbol.valueOf(c)));
 
 		} else if (c == SEPARATOR) {
 			setState(State.FIND_VALUE);

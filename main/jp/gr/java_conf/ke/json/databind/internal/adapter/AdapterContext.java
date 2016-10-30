@@ -2,7 +2,7 @@ package jp.gr.java_conf.ke.json.databind.internal.adapter;
 
 import jp.gr.java_conf.ke.json.databind.internal.conversion.Conversion;
 
-public class AdapterContext<T> {
+class AdapterContext<T> {
 
 	private T instance;
 	private Conversion<T> conversion;

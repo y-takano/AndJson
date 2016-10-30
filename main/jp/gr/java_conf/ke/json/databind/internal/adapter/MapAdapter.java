@@ -4,16 +4,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
 import jp.gr.java_conf.ke.json.databind.JsonBindException;
 import jp.gr.java_conf.ke.json.databind.converter.JsonConverter;
 import jp.gr.java_conf.ke.json.databind.internal.conversion.Conversion;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
 
 @SuppressWarnings("rawtypes")
-public class MapAdapter<T extends Map> extends ObjectAdapter<T> {
+class MapAdapter<T extends Map> extends ObjectAdapter<T> {
 
 	@SuppressWarnings("unchecked")
 	public MapAdapter(AdapterContext ctxt) {

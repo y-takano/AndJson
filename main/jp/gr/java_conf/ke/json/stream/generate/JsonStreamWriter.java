@@ -2,10 +2,10 @@ package jp.gr.java_conf.ke.json.stream.generate;
 
 import java.io.IOException;
 
-import jp.gr.java_conf.ke.json.core.BufferedTextWriter;
+import jp.gr.java_conf.ke.io.BufferedTextWriter;
+import jp.gr.java_conf.ke.json.JsonSyntaxException;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
-import jp.gr.java_conf.ke.json.stream.JsonSyntaxException;
 
 class JsonStreamWriter implements JsonGenerator, JsonBuilder {
 

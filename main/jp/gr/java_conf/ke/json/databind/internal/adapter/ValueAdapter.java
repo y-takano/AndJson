@@ -1,12 +1,12 @@
 package jp.gr.java_conf.ke.json.databind.internal.adapter;
 
+import jp.gr.java_conf.ke.json.Value;
 import jp.gr.java_conf.ke.json.databind.converter.JsonConverter;
 import jp.gr.java_conf.ke.json.databind.internal.conversion.Conversion;
-import jp.gr.java_conf.ke.json.stream.Json.Value;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
 
-public class ValueAdapter<T> extends ObjectAdapter<T> {
+class ValueAdapter<T> extends ObjectAdapter<T> {
 
 	private Class<T> type;
 	private T instance;

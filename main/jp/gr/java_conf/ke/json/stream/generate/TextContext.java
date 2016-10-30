@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import jp.gr.java_conf.ke.json.core.BufferedTextWriter;
+import jp.gr.java_conf.ke.io.BufferedTextWriter;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 
 class TextContext {

@@ -3,8 +3,8 @@ package jp.gr.java_conf.ke.json.stream;
 import java.io.Closeable;
 import java.io.IOException;
 
-import jp.gr.java_conf.ke.json.stream.Json.Symbol;
-import jp.gr.java_conf.ke.json.stream.Json.Token;
+import jp.gr.java_conf.ke.json.Symbol;
+import jp.gr.java_conf.ke.json.Token;
 
 public interface JsonParser extends Iterable<Token>, Closeable {
 

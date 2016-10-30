@@ -1,9 +1,9 @@
+jp.gr.java_conf.ke.io
+jp.gr.java_conf.ke.io.core
 jp.gr.java_conf.ke.json
-jp.gr.java_conf.ke.json.core
 jp.gr.java_conf.ke.json.databind
 jp.gr.java_conf.ke.json.databind.annotation
 jp.gr.java_conf.ke.json.databind.converter
-jp.gr.java_conf.ke.json.databind.internal
 jp.gr.java_conf.ke.json.databind.internal.adapter
 jp.gr.java_conf.ke.json.databind.internal.conversion
 jp.gr.java_conf.ke.json.stream

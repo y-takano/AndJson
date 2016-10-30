@@ -1,7 +1,11 @@
 package jp.gr.java_conf.ke.json.stream.generate;
 
-import jp.gr.java_conf.ke.json.core.BufferedTextWriter;
-import jp.gr.java_conf.ke.json.stream.JsonSyntaxException;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import jp.gr.java_conf.ke.io.BufferedTextWriter;
+import jp.gr.java_conf.ke.json.JsonSyntaxException;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 
 class ArrayWriter implements JsonBuilder {
@@ -91,7 +95,40 @@ class ArrayWriter implements JsonBuilder {
 
 		} else if (data instanceof Boolean) {
 			valueAsBoolean((Boolean)data);
-
+		} else if (data instanceof Object[]) {
+			Object[] list = (Object[])data;
+			startArray();
+			for (Object o : list) {
+				value(o);
+			}
+			endElement();
+		} else if (data instanceof List) {
+			List<?> list = (List<?>)data;
+			boolean first = true;
+			startArray();
+			for (Object o : list) {
+				if (first) {
+					first = false;
+				} else {
+					writer.write(",");
+				}
+				value(o);
+			}
+			endElement();
+		} else if (data instanceof Map) {
+			Map<?, ?> map = (Map<?,?>)data;
+			boolean first = true;
+			startObject();
+			for (Entry<?,?> entry : map.entrySet()) {
+				if (first) {
+					first = false;
+				} else {
+					writer.write(",");
+				}
+				name(String.valueOf(entry.getKey()));
+				value(entry.getValue());
+			}
+			endElement();
 		} else {
 			throw new JsonSyntaxException("valueのデータとして無効な型:" + data.getClass());
 
