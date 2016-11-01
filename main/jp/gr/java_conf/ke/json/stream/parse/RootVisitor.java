@@ -2,7 +2,9 @@ package jp.gr.java_conf.ke.json.stream.parse;
 
 import jp.gr.java_conf.ke.json.Symbol;
 import jp.gr.java_conf.ke.json.Token;
-import jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
+
+import static jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
+import static jp.gr.java_conf.ke.json.stream.parse.ParseSpec.*;
 
 class RootVisitor extends Visitor {
 

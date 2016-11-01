@@ -6,62 +6,24 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 
-import jp.gr.java_conf.ke.io.IOStreamingException;
-import jp.gr.java_conf.ke.io.BufferedTextReader;
+import jp.gr.java_conf.ke.io.BufferedTextWriter;
 
-class BufferedReaderImpl extends BufferControler implements BufferedTextReader {
+class BufferedReaderImpl extends BufferControler {
 
-	private final Reader inputStream;
-	private boolean closed;
-	private boolean reading;
-
-	public BufferedReaderImpl(Reader str) throws IOException {
-		this.inputStream = str;
+	public BufferedReaderImpl(Reader reader) throws IOException {
+		super(reader, null);
 	}
 
 	public BufferedReaderImpl(String str) throws IOException {
-		this.inputStream = new StringReader(str);
+		super(new StringReader(str), null);
 	}
 
-	public BufferedReaderImpl(InputStream str) throws IOException {
-		this.inputStream = new InputStreamReader(str);
-	}
-
-	@Override
-	public boolean isClosed() {
-		return closed;
+	public BufferedReaderImpl(InputStream is) throws IOException {
+		super(new InputStreamReader(is), null);
 	}
 
 	@Override
-	public void close() throws IOException {
-		closed = true;
-		inputStream.close();
-	}
-
-	@Override
-	public char read() throws IOException {
-		char ret = next();
-		reading = true;
-		return ret;
-	}
-
-	@Override
-	public char[] readPacket() throws IOException {
-		if (reading)
-			throw new IOStreamingException(
-					"単文字読み込み（read）中にパケット読み込み（readPacket）を呼び出せません");
-		char[] ret = readAll();
-		reading = false;
-		return ret;
-	}
-
-	@Override
-	public boolean ready() throws IOException {
-		return !isClosed() && hasNext() && inputStream.ready();
-	}
-
-	@Override
-	protected Reader getReader() throws IOException {
-		return ready() ? inputStream : null;
+	public BufferedTextWriter append(char c) {
+		throw new UnsupportedOperationException();
 	}
 }

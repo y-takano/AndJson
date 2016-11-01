@@ -21,19 +21,19 @@ class ArrayWriter implements JsonBuilder {
 	}
 
 	public JsonBuilder startObject() {
-		if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+		if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		firstElement = false;
-		writer.write(TextContext.OBJ_START);
+		writer.append(TextContext.OBJ_START);
 		return null;
 	}
 
 	public JsonBuilder startArray() {
 		if (started) {
-			if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+			if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		} else {
 			started = true;
 		}
-		writer.write(TextContext.ARRAY_START);
+		writer.append(TextContext.ARRAY_START);
 		return null;
 	}
 
@@ -44,41 +44,41 @@ class ArrayWriter implements JsonBuilder {
 
 	@Override
 	public JsonBuilder valueAsString(String data) {
-		if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+		if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		firstElement = false;
-		writer.write(TextContext.STR_START);
-		writer.write(data);
-		writer.write(TextContext.STR_END);
+		writer.append(TextContext.STR_START);
+		appendString(data);
+		writer.append(TextContext.STR_END);
 		return null;
 	}
 
 	@Override
 	public JsonBuilder valueAsNumber(Number data) {
-		if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+		if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		firstElement = false;
-		writer.write(String.valueOf(data));
+		appendString(String.valueOf(data));
 		return null;
 	}
 
 	@Override
 	public JsonBuilder valueAsBoolean(boolean data) {
-		if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+		if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		firstElement = false;
-		writer.write(String.valueOf(data));
+		appendString(String.valueOf(data));
 		return null;
 	}
 
 	@Override
 	public JsonBuilder valueAsNull() {
-		if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+		if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		firstElement = false;
-		writer.write("null");
+		appendString("null");
 		return null;
 	}
 
 	@Override
 	public JsonBuilder endElement() {
-		writer.write(TextContext.ARRAY_END);
+		writer.append(TextContext.ARRAY_END);
 		return null;
 	}
 
@@ -110,7 +110,7 @@ class ArrayWriter implements JsonBuilder {
 				if (first) {
 					first = false;
 				} else {
-					writer.write(",");
+					writer.append(',');
 				}
 				value(o);
 			}
@@ -123,7 +123,7 @@ class ArrayWriter implements JsonBuilder {
 				if (first) {
 					first = false;
 				} else {
-					writer.write(",");
+					writer.append(',');
 				}
 				name(String.valueOf(entry.getKey()));
 				value(entry.getValue());
@@ -138,10 +138,15 @@ class ArrayWriter implements JsonBuilder {
 
 	@Override
 	public JsonBuilder valueAsDirect(String data) throws JsonSyntaxException {
-		if (!this.firstElement) writer.write(TextContext.SEPARATOR);
+		if (!this.firstElement) writer.append(TextContext.SEPARATOR);
 		firstElement = false;
-		writer.write(data);
+		appendString(data);
 		return null;
 	}
 
+	private void appendString(String data) {
+		for (int i=0; i<data.length(); i++) {
+			writer.append(data.charAt(i));
+		}
+	}
 }

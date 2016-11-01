@@ -4,11 +4,7 @@ import java.io.Flushable;
 
 public interface BufferedTextWriter extends BufferedIO, Flushable {
 
-	BufferedTextWriter write(char c);
-
-	BufferedTextWriter write(char[] str);
-
-	BufferedTextWriter write(CharSequence str);
+	BufferedTextWriter append(char c);
 
 	boolean isClosed();
 }

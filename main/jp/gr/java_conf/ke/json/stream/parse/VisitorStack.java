@@ -42,10 +42,9 @@ class VisitorStack {
 	}
 
 	private final Deque<Visitor> visitors;
-	private Visitor currentVistor;
 
 	private State state;
-	private boolean escape;
+	private Visitor currentVistor;
 
 	public VisitorStack() {
 		this.visitors = new ArrayDeque<Visitor>();
@@ -56,14 +55,6 @@ class VisitorStack {
 			currentVistor = roots.remove();
 		}
 		return this.currentVistor;
-	}
-
-	public void setEscape(boolean escape) {
-		this.escape = escape;
-	}
-
-	public boolean isEscape() {
-		return escape;
 	}
 
 	public State getState() {

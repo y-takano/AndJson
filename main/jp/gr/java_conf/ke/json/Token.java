@@ -45,7 +45,7 @@ public class Token {
 
 	public static Token createSymbol(Symbol symbol) {
 		Token token = TokenRecycler.getToken();
-		token.reset(symbol, null, null);
+		token.reset(symbol, null, Value.OF_NULL);
 		return token;
 	}
 
@@ -57,7 +57,7 @@ public class Token {
 
 	public static Token createValue(ValueType type, StringBuilder text) {
 		Value value;
-		if (type == null) {
+		if (type == null || text == null) {
 			value = Value.OF_NULL;
 
 		} else {
@@ -76,7 +76,7 @@ public class Token {
 		char n[] = new char[name.length()];
 		name.getChars(0, n.length, n, 0);
 		Token token = TokenRecycler.getToken();
-		token.reset(Symbol.UNDEFINED, n, null);
+		token.reset(Symbol.UNDEFINED, n, Value.OF_NULL);
 		return token;
 	}
 

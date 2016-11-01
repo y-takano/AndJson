@@ -5,7 +5,9 @@ import java.io.IOException;
 import jp.gr.java_conf.ke.json.JsonSyntaxException;
 import jp.gr.java_conf.ke.json.Symbol;
 import jp.gr.java_conf.ke.json.Token;
-import jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
+
+import static jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
+import static jp.gr.java_conf.ke.json.stream.parse.ParseSpec.*;
 
 class ArrayVisitor  extends Visitor {
 

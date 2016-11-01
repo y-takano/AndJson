@@ -10,7 +10,7 @@ public class Converters {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static <E> JsonConverter<E> getConverter(Class<E> type) {
-		if (type == null) throw new JsonBindException("null");
+		if (type == null) throw new JsonBindException("type is null");
 		else if (type.equals(String.class)) return (JsonConverter<E>) StrConv;
 		else if (type.getName().equals("boolean") || type.equals(Boolean.class)) return (JsonConverter<E>) boolConv;
 		else if (type.getName().equals("int") || type.equals(Integer.class))  return (JsonConverter<E>) IntConv;
@@ -56,7 +56,7 @@ public class Converters {
 
 		@Override
 		public T toJava(String value, Class<T> clazz) throws JsonConvertException {
-			return (T) Enum.valueOf(clazz, value);
+			return (T) (value == null ? null : Enum.valueOf(clazz, value));
 		}
 
 		@Override
@@ -101,7 +101,7 @@ public class Converters {
 
 		@Override
 		public Integer toJava(String value, Class<Integer> clazz) throws JsonConvertException {
-			return Integer.parseInt(value);
+			return value == null ? null : Integer.parseInt(value);
 		}
 
 	};
@@ -115,7 +115,7 @@ public class Converters {
 
 		@Override
 		public Long toJava(String value, Class<Long> clazz) throws JsonConvertException {
-			return Long.parseLong(value);
+			return value == null ? null : Long.parseLong(value);
 		}
 
 	};
@@ -124,7 +124,7 @@ public class Converters {
 
 		@Override
 		public Double toJava(String value, Class<Double> clazz) {
-			return Double.parseDouble(value);
+			return value == null ? null : Double.parseDouble(value);
 		}
 
 		@Override
@@ -137,7 +137,7 @@ public class Converters {
 
 		@Override
 		public Float toJava(String value, Class<Float> clazz) {
-			return Float.parseFloat(value);
+			return value == null ? null : Float.parseFloat(value);
 		}
 
 		@Override
@@ -155,7 +155,7 @@ public class Converters {
 
 		@Override
 		public BigInteger toJava(String value, Class<BigInteger> clazz) throws JsonConvertException {
-			return new BigInteger(value);
+			return value == null ? null : new BigInteger(value);
 		}
 
 	};
@@ -169,7 +169,7 @@ public class Converters {
 
 		@Override
 		public BigDecimal toJava(String value, Class<BigDecimal> clazz) throws JsonConvertException {
-			return new BigDecimal(value);
+			return value == null ? null : new BigDecimal(value);
 		}
 
 	};

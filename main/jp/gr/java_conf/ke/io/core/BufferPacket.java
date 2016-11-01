@@ -43,12 +43,14 @@ class BufferPacket implements Iterator<Character>{
 
 	@Override
 	public boolean hasNext() {
-		return index <= size;
+		return index <= size - 1;
 	}
 
 	@Override
 	public Character next() {
-		return buf[index++];
+		char c = buf[index];
+		index++;
+		return c;
 	}
 
 	public String toString() {

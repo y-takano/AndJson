@@ -3,7 +3,7 @@ package jp.gr.java_conf.ke.json.databind.internal.adapter;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
 
-public class IgnoreAdapter extends ObjectAdapter<Object> {
+class IgnoreAdapter extends ObjectAdapter<Object> {
 
 	public IgnoreAdapter() {
 		super(null);

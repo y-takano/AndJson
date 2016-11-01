@@ -1,7 +1,7 @@
 package jp.gr.java_conf.ke.io.core;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 import jp.gr.java_conf.ke.io.BufferedIO;
 import jp.gr.java_conf.ke.io.IOStreamingException;
@@ -11,25 +11,25 @@ class BufferPacketRecycler {
 	private static final int PACKET_SIZE = BufferedIO.DEFAULT_PACKET_SIZE;
 	private static final int MAX_POOL_SIZE = 10000;
 	private static final int MAX_BYTE_SIZE = PACKET_SIZE * MAX_POOL_SIZE;
-	private static final int NEW_POOL_SIZE = 500;
+	private static final int NEW_POOL_SIZE = 10;
 
-	private static final Queue<BufferPacket> PACKET_POOL = new LinkedList<BufferPacket>();
+	private static final List<BufferPacket> PACKET_POOL = new ArrayList<BufferPacket>();
 
 	static {
 		allocate(NEW_POOL_SIZE);
 	}
 
 	public static BufferPacket getPacket() {
-		BufferPacket p = PACKET_POOL.poll();
-		if (p == null) {
+		if (PACKET_POOL.size() == 0) {
 			allocate(10);
-			p = PACKET_POOL.remove();
 		}
-		return p;
+		BufferPacket ret = PACKET_POOL.remove(0);
+		ret.reset();
+		return ret;
 	}
 
 	public static void release(BufferPacket packet) {
-		PACKET_POOL.offer(packet);
+		PACKET_POOL.add(packet);
 	}
 
 	public static void allocate(int packNum) {
@@ -45,7 +45,7 @@ class BufferPacketRecycler {
 			num = packNum;
 		}
 		for (int i=0; i<num; i++) {
-			PACKET_POOL.offer(new BufferPacket(PACKET_SIZE));
+			PACKET_POOL.add(new BufferPacket(PACKET_SIZE));
 		}
 	}
 }
