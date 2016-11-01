@@ -1,7 +1,7 @@
 # AndJson
-[GitHub Pages](https://y-takano.github.io/AndJson/)
-Android用JSON-POJO変換ライブラリ（Android以外でも使用可能）。
-====
+　Android用JSON-POJO変換ライブラリ  - [ [GitHub Pages](https://y-takano.github.io/AndJson/) ]
+　（Android以外でも使用可能）。
+
 
 ## Overview（概要）
 
