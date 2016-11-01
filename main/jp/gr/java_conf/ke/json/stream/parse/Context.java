@@ -67,4 +67,10 @@ class Context implements Iterator<Token> {
 			throw new IOStreamingException(e);
 		}
 	}
+
+	@Override
+	public void remove() {
+		// TODO 自動生成されたメソッド・スタブ
+
+	}
 }
