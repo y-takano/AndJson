@@ -129,7 +129,11 @@ out:
 
 ## Requirement（依存関係）
 
-　特になし
+　依存ライブラリなし。動作保障環境は以下の通り。
+
+>　Java Runtime: 1.5(Tiger)以上
+>  Android: minSdkLevel 8(Froyo)以上
+>　　　　　（最低動作保証APIレベル）
 
 ## Licence
 
