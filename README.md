@@ -12,6 +12,13 @@
 　最新版 - 0.1.2ベータ版（以下）からダウンロードしてください。   
 　https://github.com/y-takano/AndJson/releases/tag/0.1.2-beta  
 
+## Requirement（依存関係）
+
+　依存ライブラリなし。動作保障環境は以下の通り。
+
+>　Java Runtime: 1.5(Tiger)以上  
+>　Android minSdkLevel: 8(Froyo)以上 （最低動作保証APIレベル）  
+
 ## Usage（使い方）
 
 ### databinding
@@ -126,14 +133,6 @@ writer.flushAndClose();
 ```
 out:
 > {"name1":"val1","name2":"{aaa:val}","name3":["aaa",null,false,-210391],"name4":{"aaa":null},"name5":true,"name6":null,"name7":2147483647,"name8":{"name5":"","name4":-2147483648,"name3":true,"name2":null,"name1":"aaa"}}
-
-## Requirement（依存関係）
-
-　依存ライブラリなし。動作保障環境は以下の通り。
-
->　Java Runtime: 1.5(Tiger)以上
->  Android: minSdkLevel 8(Froyo)以上
->　　　　　（最低動作保証APIレベル）
 
 ## Licence
 
