@@ -10,12 +10,12 @@ import jp.gr.java_conf.ke.io.BufferedTextWriter;
 
 class BufferedReaderImpl extends BufferControler {
 
-	public BufferedReaderImpl(Reader reader) throws IOException {
-		super(reader, null);
+	public BufferedReaderImpl(String str) {
+		super(new StringReader(str), null);
 	}
 
-	public BufferedReaderImpl(String str) throws IOException {
-		super(new StringReader(str), null);
+	public BufferedReaderImpl(Reader reader) throws IOException {
+		super(reader, null);
 	}
 
 	public BufferedReaderImpl(InputStream is) throws IOException {

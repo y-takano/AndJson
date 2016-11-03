@@ -12,7 +12,7 @@ public class JsonParserFactory {
 
 	private JsonParserFactory() {}
 
-	public static JsonParser createParser(String jsonText) throws IOException {
+	public static JsonParser createParser(String jsonText) {
 		return new JsonParserImpl(BufferedIOFactory.createReader(jsonText));
 	}
 
@@ -30,10 +30,6 @@ public class JsonParserFactory {
 
 	static {
 		String testStr = "{\"name1\":\"val1\",\"name2\":-229.31289,\"name3\":[\"val1\"],\"name4\":{\"key1\":\"val1\"}}";
-		try {
-			for (@SuppressWarnings("unused") Object o :new JsonParserImpl(BufferedIOFactory.createReader(testStr))) ;
-		} catch (IOException e) {
-			throw new ExceptionInInitializerError(e);
-		}
+		for (@SuppressWarnings("unused") Object o :new JsonParserImpl(BufferedIOFactory.createReader(testStr))) ;
 	}
 }

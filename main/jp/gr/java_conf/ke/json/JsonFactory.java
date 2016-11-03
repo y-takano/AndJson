@@ -28,7 +28,40 @@ import jp.gr.java_conf.ke.json.stream.parse.JsonParserFactory;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class JsonFactory {
 
-	public static JsonParser createParser(String jsonText) throws IOException {
+	public static <E> String toJson(E jsonObject) {
+		return new JavaObjectMapper().toJson(jsonObject, createGenerator());
+	}
+
+	public static <E> String serialize(E jsonObject, OutputStream out) {
+		return new JavaObjectMapper().toJson(jsonObject, createGenerator(out));
+	}
+
+	public static <E> String serialize(E jsonObject, Writer writer) {
+		return new JavaObjectMapper().toJson(jsonObject, createGenerator(writer));
+	}
+
+	public static <E> String serialize(E jsonObject, File file) throws FileNotFoundException {
+		return new JavaObjectMapper().toJson(jsonObject, createGenerator(file));
+	}
+
+	public static <E> E toObject(String jsonText, Class<E> clazz) throws JsonConvertException {
+		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
+	}
+
+	public static <E> E deserialize(InputStream jsonText, Class<E> clazz) throws JsonConvertException, IOException {
+		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
+	}
+
+	public static <E> E deserialize(Reader jsonText, Class<E> clazz) throws JsonConvertException, IOException {
+		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
+	}
+
+
+	public static <E> E deserialize(File jsonText, Class<E> clazz) throws JsonConvertException, IOException {
+		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
+	}
+
+	public static JsonParser createParser(String jsonText) {
 		return JsonParserFactory.createParser(jsonText);
 	}
 
@@ -60,47 +93,12 @@ public class JsonFactory {
 		return JsonGeneratorFactory.createGenerator(new FileOutputStream(file));
 	}
 
-	public static <E> String toJson(E jsonObject) {
-		return new JavaObjectMapper().toJson(jsonObject, createGenerator());
-	}
-
-	public static <E> String serialize(E jsonObject, OutputStream out) {
-		return new JavaObjectMapper().toJson(jsonObject, createGenerator(out));
-	}
-
-	public static <E> String serialize(E jsonObject, Writer writer) {
-		return new JavaObjectMapper().toJson(jsonObject, createGenerator(writer));
-	}
-
-	public static <E> String serialize(E jsonObject, File file) throws FileNotFoundException {
-		return new JavaObjectMapper().toJson(jsonObject, createGenerator(file));
-	}
-
-	public static <E> E deserialize(String jsonText, Class<E> clazz) throws JsonConvertException, IOException {
-		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
-	}
-
-	public static <E> E deserialize(InputStream jsonText, Class<E> clazz) throws JsonConvertException, IOException {
-		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
-	}
-
-	public static <E> E deserialize(Reader jsonText, Class<E> clazz) throws JsonConvertException, IOException {
-		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
-	}
-
-
-	public static <E> E deserialize(File jsonText, Class<E> clazz) throws JsonConvertException, IOException {
-		return (E) new JavaObjectMapper().toJava(createParser(jsonText), clazz);
-	}
-
 	@SuppressWarnings("unused")
 	private static class RazyClass {
 		static {
 			try {
-				deserialize("{\"name1\":\"val1\",\"name2\":-229.31289,\"name3\":[\"val1\"],\"name4\":{\"key1\":\"val1\"},\"name5\":{}}", TestClass.class);
+				toObject("{\"name1\":\"val1\",\"name2\":-229.31289,\"name3\":[\"val1\"],\"name4\":{\"key1\":\"val1\"},\"name5\":{}}", TestClass.class);
 			} catch (JsonConvertException e) {
-				throw new ExceptionInInitializerError(e);
-			} catch (IOException e) {
 				throw new ExceptionInInitializerError(e);
 			}
 		}

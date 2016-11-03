@@ -12,7 +12,7 @@ import jp.gr.java_conf.ke.io.BufferedTextWriter;
 
 public class BufferedIOFactory {
 
-	public static BufferedTextReader createReader(String str) throws IOException {
+	public static BufferedTextReader createReader(String str) {
 		return new BufferedReaderImpl(str);
 	}
 

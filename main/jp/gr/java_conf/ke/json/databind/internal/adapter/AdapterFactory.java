@@ -2,6 +2,7 @@ package jp.gr.java_conf.ke.json.databind.internal.adapter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -79,7 +80,9 @@ public class AdapterFactory {
 
 				// その他はBeanとして扱う
 			} else {
-				E instance = concrete.newInstance();
+				Constructor<E> constructor = (Constructor<E>) concrete.getDeclaredConstructor();
+				constructor.setAccessible(true);
+				E instance = constructor.newInstance();
 				AdapterContext<E> ctxt = new AdapterContext<E>(instance,
 						conversion);
 				ret = new BeanAdapter<E>(ctxt);
@@ -191,7 +194,10 @@ public class AdapterFactory {
 
 					// その他はBeanとして扱う
 				} else {
-					instance = concrete.newInstance();
+
+					Constructor<?> constructor = concrete.getDeclaredConstructor();
+					constructor.setAccessible(true);
+					instance = constructor.newInstance();
 					AdapterContext ctxt = new AdapterContext(instance, conversion);
 					adapter = new BeanAdapter(ctxt);
 				}
