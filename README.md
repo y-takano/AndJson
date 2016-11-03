@@ -4,7 +4,7 @@
 
 ## Overview（概要）
 
-　databinding　・・・　Json文字列⇔POJO変換を1行で実施するための仕組み  
+　databinding　・・・　Json文字列⇔POJO変換を1行で実現するための仕組み  
 　iostreaming　・・・　Json文字列解析(Parser)、Json文字列生成(Generator)機能を利用するための仕組み  
 
 ## Install（環境設定）
@@ -30,7 +30,7 @@ UseCase_JsonToPOJO.java
 ```java
 import jp.gr.java_conf.ke.json.JsonFactory;
 
-POJO pojo = JsonFactory.toObject("{aaa:\"test\"}", POJO.class);
+POJO pojo = JsonFactory.toObject("{\"aaa\":\"test\"}", POJO.class);
 ```
 
 UseCase_POJOtoJson.java
@@ -43,7 +43,7 @@ System.out.println(json);
 ```
 
 out:
-> {aaa:null}  
+> {"aaa":null}  
 
 ### iostreaming
 
