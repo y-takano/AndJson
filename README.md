@@ -65,6 +65,7 @@ import java.net.URI;
 
 import jp.gr.java_conf.ke.json.JsonFactory;
 import jp.gr.java_conf.ke.json.stream.JsonParser;
+import jp.gr.java_conf.ke.json.Token;
 
 File jsonFile = new File(new URI("Test.jsn"));
 JsonParser parser = JsonFactory.createParser(jsonFile);
@@ -93,6 +94,9 @@ out:
 
 UseCase_Generator.java
 ```java
+import java.util.HashMap;
+import java.util.Map;
+
 import jp.gr.java_conf.ke.json.JsonFactory;
 
 Map<String, Object> map = new HashMap<>();
