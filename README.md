@@ -30,6 +30,10 @@ import jp.gr.java_conf.ke.json.databind.annotation.JsonBean;
 @JsonBean
 class POJO {
  private String aaa;
+
+ public String getAaa() {
+  return aaa;
+ }
 }
 ```
 
@@ -38,7 +42,10 @@ UseCase_JsonToPOJO.java
 import jp.gr.java_conf.ke.json.JsonFactory;
 
 POJO pojo = JsonFactory.toObject("{\"aaa\":\"test\"}", POJO.class);
+System.out.println(pojo.getAaa());
 ```
+out:
+> test
 
 UseCase_POJOtoJson.java
 ```java
@@ -77,7 +84,7 @@ import jp.gr.java_conf.ke.json.Token;
 File jsonFile = new File(new URI("Test.jsn"));
 JsonParser parser = JsonFactory.createParser(jsonFile);
 
-for (Token t : p) {
+for (Token t : parser) {
   System.out.println(t);
 }
 ```
