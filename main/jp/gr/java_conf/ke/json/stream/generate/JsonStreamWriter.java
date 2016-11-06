@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import jp.gr.java_conf.ke.io.BufferedTextWriter;
 import jp.gr.java_conf.ke.json.JsonSyntaxException;
+import jp.gr.java_conf.ke.json.TokenRecycler;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator;
 import jp.gr.java_conf.ke.json.stream.JsonGenerator.JsonBuilder;
 
@@ -17,17 +18,20 @@ class JsonStreamWriter implements JsonGenerator, JsonBuilder {
 
 	@Override
 	public JsonBuilder rootObject() {
+		TokenRecycler.initialize();
 		return this;
 	}
 
 	@Override
 	public JsonBuilder rootArray() {
+		TokenRecycler.initialize();
 		return this;
 	}
 
 	@Override
 	public void flushAndClose() throws IOException {
 		ctxt.flush();
+		TokenRecycler.releaseLock();
 	}
 
 	@Override

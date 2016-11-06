@@ -98,7 +98,11 @@ abstract class BufferControler implements BufferedTextReader, BufferedTextWriter
 
 		} else if (!currentPacket.hasNext()) {
 			BufferPacketRecycler.release(currentPacket);
-			currentPacket = nextPacket;
+			if (nextPacket != null) {
+				currentPacket = nextPacket;
+			} else {
+				currentPacket = BufferPacketRecycler.getPacket();
+			}
 			if (!streamClosed) {
 				nextPacket = BufferPacketRecycler.getPacket();
 				readPacket(nextPacket);

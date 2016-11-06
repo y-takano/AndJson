@@ -1,13 +1,12 @@
 package jp.gr.java_conf.ke.json.stream.parse;
 
 import java.io.IOException;
-import java.util.Queue;
 
 import jp.gr.java_conf.ke.json.JsonSyntaxException;
 import jp.gr.java_conf.ke.json.Symbol;
 import jp.gr.java_conf.ke.json.Token;
 import jp.gr.java_conf.ke.json.ValueType;
-
+import jp.gr.java_conf.ke.util.collection.Queue;
 import static jp.gr.java_conf.ke.json.stream.parse.VisitorStack.State;
 import static jp.gr.java_conf.ke.json.stream.parse.ParseSpec.*;
 
@@ -16,8 +15,8 @@ abstract class Visitor {
 	private final char END = endSymbol();
 	private final State DEFAULT_STATE = defaultState();
 
-	protected StringBuilder sb;
-	protected StringBuilder literal;
+	protected StringBuffer sb;
+	protected StringBuffer literal;
 
 	private VisitorStack stack;
 	private Queue<Token> tokenQueue;
@@ -148,8 +147,8 @@ abstract class Visitor {
 		offerToken(token);
 	}
 
-	protected StringBuilder newBuilder() {
-		return new StringBuilder(30);
+	protected StringBuffer newBuilder() {
+		return new StringBuffer(30);
 	}
 
 	protected void throwException(String msg) throws JsonSyntaxException {
@@ -161,7 +160,7 @@ abstract class Visitor {
 		if (escape) return ret;
 
 		if (literal == null) {
-			literal = new StringBuilder(4);
+			literal = new StringBuffer(4);
 			literal.append(c);
 			return ret;
 		}

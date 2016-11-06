@@ -2,13 +2,14 @@ package jp.gr.java_conf.ke.json.stream.parse;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
 
 import jp.gr.java_conf.ke.io.BufferedTextReader;
 import jp.gr.java_conf.ke.io.IOStreamingException;
 import jp.gr.java_conf.ke.json.JsonSyntaxException;
 import jp.gr.java_conf.ke.json.Token;
+import jp.gr.java_conf.ke.json.TokenRecycler;
+import jp.gr.java_conf.ke.util.collection.BlockingQueue;
+import jp.gr.java_conf.ke.util.collection.Queue;
 
 class Context implements Iterator<Token> {
 
@@ -18,8 +19,9 @@ class Context implements Iterator<Token> {
 
 	public Context(BufferedTextReader reader) {
 		this.reader = reader;
-		this.tokenQueue = new LinkedList<Token>();
+		this.tokenQueue = new BlockingQueue<Token>();
 		this.stack = new VisitorStack();
+		TokenRecycler.initialize();
 	}
 
 	@Override
@@ -27,12 +29,16 @@ class Context implements Iterator<Token> {
 		if (tokenQueue.isEmpty()) {
 			postToken();
 		}
-		return !tokenQueue.isEmpty();
+		boolean ret = !tokenQueue.isEmpty();
+		if (!ret) {
+			close();
+		}
+		return ret;
 	}
 
 	@Override
 	public Token next() {
-		return hasNext() ? tokenQueue.remove() : null;
+		return hasNext() ? tokenQueue.take() : null;
 	}
 
 	void close() {
@@ -40,6 +46,8 @@ class Context implements Iterator<Token> {
 			reader.close();
 		} catch (IOException e) {
 			throw new IOStreamingException(e);
+		} finally {
+			TokenRecycler.releaseLock();
 		}
 	}
 

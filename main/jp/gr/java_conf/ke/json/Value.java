@@ -3,7 +3,7 @@ package jp.gr.java_conf.ke.json;
 public class Value {
 
 	private ValueType type;
-	private char[] text;
+	private volatile char[] text;
 
 	public static final Value OF_NULL = new Value(ValueType.NULL, new char[] {'n', 'u', 'l', 'l'});
 

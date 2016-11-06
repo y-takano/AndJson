@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 class BufferPacket implements Iterator<Character>{
 
-	private final char[] buf;
+	private volatile char[] buf;
 	private int size;
 	private int index = 0;
 

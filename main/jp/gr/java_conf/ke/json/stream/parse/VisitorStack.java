@@ -1,9 +1,7 @@
 package jp.gr.java_conf.ke.json.stream.parse;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
+import jp.gr.java_conf.ke.util.collection.ConccurentStack;
+import jp.gr.java_conf.ke.util.collection.Stack;
 
 class VisitorStack {
 
@@ -17,42 +15,38 @@ class VisitorStack {
 		END,
 	}
 
-	private static final int ROOTS_SIZE = 10;
-	private static final Queue<Visitor> roots = new LinkedList<Visitor>();
-	static {
-		for(int i=0; i<ROOTS_SIZE; i++) {
-			roots.add(new RootVisitor());
-		}
-	}
+//	private static final int ROOTS_SIZE = 1000;
+//	private final Queue<Visitor> roots = new NonBlockingQueue<Visitor>();
+//	static {
+//		for(int i=0; i<ROOTS_SIZE; i++) {
+//			roots.offer(new RootVisitor());
+//		}
+//	}
+//
+//	private static final int OBJS_SIZE = 100000;
+//	private static final Queue<Visitor> objs = new BlockingQueue<Visitor>();
+//	static {
+//		for(int i=0; i<OBJS_SIZE; i++) {
+//			objs.offer(new ObjectVisitor());
+//		}
+//	}
+//
+//	private static final int ARYS_SIZE = 2000000;
+//	private static final Queue<Visitor> arrays = new BlockingQueue<Visitor>();
+//	static {
+//		for(int i=0; i<ARYS_SIZE; i++) {
+//			arrays.offer(new ArrayVisitor());
+//		}
+//	}
 
-	private static final int OBJS_SIZE = 100;
-	private static final Queue<Visitor> objs = new LinkedList<Visitor>();
-	static {
-		for(int i=0; i<OBJS_SIZE; i++) {
-			objs.add(new ObjectVisitor());
-		}
-	}
-
-	private static final int ARYS_SIZE = 100;
-	private static final Queue<Visitor> arrays = new LinkedList<Visitor>();
-	static {
-		for(int i=0; i<ARYS_SIZE; i++) {
-			arrays.add(new ArrayVisitor());
-		}
-	}
-
-	private final Deque<Visitor> visitors;
+	private final Stack<Visitor> visitors = new ConccurentStack<Visitor>();
 
 	private State state;
 	private Visitor currentVistor;
 
-	public VisitorStack() {
-		this.visitors = new ArrayDeque<Visitor>();
-	}
-
 	public Visitor getCurrentVisitor() {
 		if (visitors.size() == 0) {
-			currentVistor = roots.remove();
+			currentVistor = new RootVisitor();
 		}
 		return this.currentVistor;
 	}
@@ -67,24 +61,26 @@ class VisitorStack {
 
 	public void startArray() {
 		visitors.push(currentVistor);
-		currentVistor = arrays.remove();
+		currentVistor = new ArrayVisitor();
 		state = State.FIND_VALUE;
 	}
 
 	public void startObject() {
 		visitors.push(currentVistor);
-		currentVistor = objs.remove();
+		currentVistor = new ObjectVisitor();
 		state = State.FIND_NAME;
 	}
 
-	public void endElement() {
-		release(currentVistor);
-		currentVistor = visitors.pop();
+	public synchronized void endElement() {
+		//release(currentVistor);
+		try {
+			currentVistor = visitors.pop();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		}
 		if (visitors.size() > 0) {
 			state = State.FIND_NEXT;
 		} else {
-			release(currentVistor);
-			release(currentVistor);
 			state = State.END;
 		}
 	}
@@ -93,15 +89,23 @@ class VisitorStack {
 		return this.state == State.END;
 	}
 
-	private void release(Visitor v) {
-		if (v instanceof RootVisitor) {
-			roots.offer(v);
-		} else if (v instanceof ObjectVisitor) {
-			objs.offer(v);
-		} else if (v instanceof ArrayVisitor) {
-			arrays.offer(v);
-		} else {
-			throw new RuntimeException();
-		}
-	}
+//	private synchronized void release(Visitor v) {
+//		if (v instanceof RootVisitor) {
+//			if (roots.size() < ROOTS_SIZE) {
+//				roots.offer(v);
+//			}
+//		} else if (v instanceof ObjectVisitor) {
+//			objs.offer(v);
+//		} else if (v instanceof ArrayVisitor) {
+//			arrays.offer(v);
+//		} else {
+//			throw new RuntimeException();
+//		}
+//	}
+
+//	private synchronized Visitor getVisitor(Queue<Visitor> queue) {
+//		Visitor visitor;
+//		visitor = queue.take();
+//		return visitor;
+//	}
 }

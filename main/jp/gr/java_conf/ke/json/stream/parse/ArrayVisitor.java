@@ -45,7 +45,7 @@ class ArrayVisitor  extends Visitor {
 		case FIND_NAME:
 		case END:
 		default:
-			throwException("構文エラー: [" + c + "], State=" + getState());
+			throwException("構文エラー: [" + c + "] State=" + getState());
 		}
 	}
 

@@ -3,7 +3,7 @@ package jp.gr.java_conf.ke.json;
 public class Token {
 
 	private Symbol symbol;
-	private char[] name;
+	private volatile char[] name;
 	private Value value;
 
 	Token() {
@@ -55,7 +55,7 @@ public class Token {
 		return token;
 	}
 
-	public static Token createValue(ValueType type, StringBuilder text) {
+	public static Token createValue(ValueType type, CharSequence text) {
 		Value value;
 		if (type == null || text == null) {
 			value = Value.OF_NULL;
@@ -63,7 +63,9 @@ public class Token {
 		} else {
 
 			char t[] = new char[text.length()];
-			text.getChars(0, t.length, t, 0);
+			for (int i=0; i<t.length; i++) {
+				t[i] = text.charAt(i);
+			}
 			value = new Value(type, t);
 		}
 
@@ -72,9 +74,11 @@ public class Token {
 		return token;
 	}
 
-	public static Token createName(StringBuilder name) {
+	public static Token createName(CharSequence name) {
 		char n[] = new char[name.length()];
-		name.getChars(0, n.length, n, 0);
+		for (int i=0; i<n.length; i++) {
+			n[i] = name.charAt(i);
+		}
 		Token token = TokenRecycler.getToken();
 		token.reset(Symbol.UNDEFINED, n, Value.OF_NULL);
 		return token;
