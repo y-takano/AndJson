@@ -9,8 +9,8 @@
 
 ## Install（環境設定）
 
-　最新版 - 0.1.2ベータ版（以下）からダウンロードしてください。   
-　https://github.com/y-takano/AndJson/releases/tag/0.1.2-beta  
+　最新版 - 0.1.3ベータ版（以下）からダウンロードしてください。   
+　https://github.com/y-takano/AndJson/releases/tag/0.1.3-beta  
 
 ## Requirement（依存関係）
 
